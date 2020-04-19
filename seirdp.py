@@ -24,6 +24,9 @@ class seirdp():
     self.socDistResponseFactor = socDistResponseFactor
     self.diseaseScalingFactor = diseaseScalingFactor
 
+    # Flags
+    self.thresholdPrintFlag = False # When True, prints a statement of when countermeasures go into effect
+
   ## Model of SEIRDP
   def model(self, Y, x, N, r0, thrPop, thrDay, r1, gamma, sigma, pho):
     S, E, I, R, D, P = Y
@@ -34,6 +37,10 @@ class seirdp():
 
     # Assigning constants
     if (x >= thrDay):
+        if self.thresholdPrintFlag:
+          print("Countermeasures come into effect on day: " + str(x))
+          self.thresholdPrintFlag = False
+
         beta = self.logisticFunction(x, thrDay, self.socDistResponseFactor) * gamma
     else:
       beta = r0*gamma
@@ -56,9 +63,10 @@ class seirdp():
     return self.diseaseScalingFactor * I / N + self.alphaOptimal
 
   ## Getting the populations of the different states
-  def solve(self, population, E0=1, thrPop, thrDay, daysModel):
+  def solve(self, population, E0, thrPop, thrDay, daysModel):
     X = np.arange(daysModel)  # time steps array
     N0 = population - E0, E0, 0, 0, 0, 0  # S, E, I, R, D at initial step
+    self.thresholdPrintFlag = True
     
     y_data_var = scipy.integrate.odeint(self.model, N0, X, args=(
       population, self.r0, thrPop, thrDay, self.r1, self.gamma, self.sigma, self.pho))
