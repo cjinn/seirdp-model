@@ -61,8 +61,8 @@ Here is the list of parameters that you should change:
 * r1 - Basic Reproduction Number (After countermeasures are in place)
 * gamma - The rate an infectious is not recovers and moves into the resistant phase. Note that for the model it only means he does not infect anybody any more.
 * sigma - The rate at which an exposed person becomes infectious
-* KILL_PROBABILITY - Probability that the disease kills an infected person on a good day
-* fatalityRateAvg - Average fatality rate of the disease (how likely a person dies)
+* baseAlpha - Probability that the disease kills an infected person on a good day
+* rho - Average Rate at which people die (1/6 = 6 days to kill a person)
 * socDistResponseFactor - Population's response to countermeasures. Range at [0, 1]. Defaults at 1.0. The higher this number is, the likelihood the population responds positively to the countermeasures. 
 * diseaseScalingFactor - How more deadly the disease is the greater the population of the infectious. Range at [0, 1]. Defaults at 0.0. The more overworked the system is, the higher the number gets.
 * population - Population number. Note that population system is closed.

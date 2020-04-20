@@ -9,14 +9,14 @@ import math
 import covid_params # Change the values here if you want to adjust one variable at a time
 
 class seirdp():
-  def __init__(self, r0, r1, gamma, sigma, baseAlpha, fatalityRateAvg, socDistResponseFactor=1.0, diseaseScalingFactor=0.1):
+  def __init__(self, r0, r1, gamma, sigma, baseAlpha, rho, socDistResponseFactor=1.0, diseaseScalingFactor=0.1):
     # Assign variables
     self.r0 = r0
     self.r1 = r1
     self.gamma = gamma
     self.sigma = sigma
     self.baseAlpha = baseAlpha
-    self.pho = fatalityRateAvg
+    self.rho = rho
     self.socDistResponseFactor = socDistResponseFactor
     self.diseaseScalingFactor = diseaseScalingFactor
 
@@ -24,7 +24,7 @@ class seirdp():
     self.thresholdPrintFlag = False # When True, prints a statement of when countermeasures go into effect
 
   ## Model of SEIRDP
-  def model(self, Y, x, N, r0, thrPop, thrDay, r1, gamma, sigma, pho):
+  def model(self, Y, x, N, r0, thrPop, thrDay, r1, gamma, sigma, rho):
     S, E, I, R, D = Y
 
     # Disease population hits threshold. Begin social distancing
@@ -44,9 +44,9 @@ class seirdp():
 
     dS = - beta * S * I / N
     dE = beta * S * I / N - sigma * E
-    dI = sigma * E - (1 - alpha) * gamma * I - alpha * pho * I
+    dI = sigma * E - (1 - alpha) * gamma * I - alpha * rho * I
     dR = (1 - alpha)*gamma * I
-    dD = alpha*pho*I
+    dD = alpha*rho*I
     return dS, dE, dI, dR, dD
 
   ## Modelling R0 from before and after countermeasures
@@ -65,7 +65,7 @@ class seirdp():
     self.thresholdPrintFlag = True
     
     y_data_var = scipy.integrate.odeint(self.model, N0, X, args=(
-      population, self.r0, thrPop, thrDay, self.r1, self.gamma, self.sigma, self.pho))
+      population, self.r0, thrPop, thrDay, self.r1, self.gamma, self.sigma, self.rho))
       
     S, E, I, R, D = y_data_var.T  # transpose and unpack
     return X, S, E, I, R, D  # note these are all arrays
@@ -75,7 +75,7 @@ if __name__ == "__main__":
   E0 = 1  # exposed at initial time step
 
   modelInstance = seirdp(covid_params.r0, covid_params.r1, covid_params.GAMMA, covid_params.SIGMA,
-    covid_params.KILL_PROBABILITY, covid_params.FATALITY_RATE_AVERAGE, covid_params.SOCIAL_DISTANCE_RESPONSE_FACTOR)
+    covid_params.BASE_ALPHA, covid_params.RHO_AVERAGE, covid_params.SOCIAL_DISTANCE_RESPONSE_FACTOR)
   X, S, E, I, R, D = modelInstance.solve(covid_params.POPULATION, E0, covid_params.SOCIAL_DISTANCE_THRESHOLD_POPULATION, covid_params.SOCIAL_DISTANCE_DAY, covid_params.DAYS_MODEL)
 
   # Plot

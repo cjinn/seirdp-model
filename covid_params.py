@@ -19,16 +19,16 @@ POPULATION_PROPORTION_AGE_RANGE = {
 
 ## Disease-specific
 r0 = 2.5 # https://en.wikipedia.org/wiki/Basic_reproduction_number
-r1 = 1.5  # reproduction number after quarantine measures
-KILL_PROBABILITY = 0.07 # Probability that the disease kills an infected person on a good day
-FATALITY_RATE_AGE = { # Rate at which people die (1/6 = 6 days to kill a person)
+r1 = 1.08  # reproduction number after quarantine measures
+BASE_ALPHA = 0.07 # Probability that the disease kills an infected person on a good day
+RHO_AGE_RANGE = { # Rate at which people die (1/6 = 6 days to kill a person)
   "0-1": 0.50,
   "2-29": 0.01,
-  "30-59": 0.99,
-  "60-89": 0.99,
-  "89+": 0.99
+  "30-59": 0.2,
+  "60-89": 0.4,
+  "89+": 0.6
 }
-FATALITY_RATE_AVERAGE = sum(POPULATION_PROPORTION_AGE_RANGE[ii]*FATALITY_RATE_AGE[ii] 
+RHO_AVERAGE = sum(POPULATION_PROPORTION_AGE_RANGE[ii]*RHO_AGE_RANGE[ii] 
   for ii in list(POPULATION_PROPORTION_AGE_RANGE.keys())) # Gets the average fatality rate across the different ages
 
 TIME_PRESYMPTOMATIC = 2.5 # Not sure where this came from
