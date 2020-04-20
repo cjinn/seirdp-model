@@ -50,6 +50,8 @@ Demo
 -----------
 1. Run the command `python3 seirdp.py`
 
+Note that this demo runs off `covid_params.py`. These numbers are hypothetical numbers.
+
 Parameters
 -----------
 There are many parameters when modelling a disease. This model attempts to account for many different scenarios. See `covid_params.py` to get a good feeling of what parameters are used.
@@ -59,20 +61,17 @@ Here is the list of parameters that you should change:
 * r1 - Basic Reproduction Number (After countermeasures are in place)
 * gamma - The rate an infectious is not recovers and moves into the resistant phase. Note that for the model it only means he does not infect anybody any more.
 * sigma - The rate at which an exposed person becomes infectious
-* optimalKillRate - Rate of killing an infectious person
-* fatalityRateAvg - Average fatality rate of the disease
-* birthRateDaily - Birth Rate per day. Set this to 0 if you don't want your model to use it
-* natDeathRateDaily - "Natural" Death Rate per day. Set this to 0 if you don't want your model to use it
-* socDistResponseFactor - Population's response to countermeasures. Defaults at 1.0. Higher values gives weird results
-* diseaseScalingFactor - How more deadly the disease is the greater the population of the infectious. Defaults at 0. Set this at 1 or higher to really try and kill everyone.
-* population - Population number. Note that population is closed.
+* KILL_PROBABILITY - Probability that the disease kills an infected person on a good day
+* fatalityRateAvg - Average fatality rate of the disease (how likely a person dies)
+* socDistResponseFactor - Population's response to countermeasures. Range at [0, 1]. Defaults at 1.0. The higher this number is, the likelihood the population responds positively to the countermeasures. 
+* diseaseScalingFactor - How more deadly the disease is the greater the population of the infectious. Range at [0, 1]. Defaults at 0.0. The more overworked the system is, the higher the number gets.
+* population - Population number. Note that population system is closed.
 * E0 - Initial amount of people infected with the disease.
 * thrPop - Threshold of Infected, Dead and Recovered population to trigger countermeasures (social distancing, quarantine, etc). Set this very high to never trigger it.
 * thrDay - Day that trigger countermeasures (social distancing, quarantine, etc) unless thrPop triggers it first. Set this higher than daysModel to never trigger it.
-* daysModel - Number of days to simulate the model. 100 days provides good resolution for the figure.
+* daysModel - Number of days to simulate the model. 150 days provides good resolution for the figure.
 
 References
 =======
 * https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
 * https://towardsdatascience.com/infectious-disease-modelling-beyond-the-basic-sir-model-216369c584c4
-* https://www.idmod.org/docs/hiv/model-seir.html
