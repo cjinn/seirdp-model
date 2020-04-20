@@ -6,7 +6,7 @@ NUM_DAYS_IN_YEAR = 365
 
 # Population
 POPULATION = 10000
-DAYS_TOTAL = 100
+DAYS_MODEL = 150
 
 SOCIAL_DISTANCE_RESPONSE_FACTOR = 0.5 # Factor that states how the population is willing to comply to social distancing
 POPULATION_PROPORTION_AGE_RANGE = {
@@ -24,8 +24,8 @@ NATURAL_DEATH_RATE_ANNUAL = 7/1000 # Death due to non-disease-related causes
 # Disease-specific
 r0 = 2.5 # https://en.wikipedia.org/wiki/Basic_reproduction_number
 r1 = 1.5  # reproduction number after quarantine measures
-KILL_RATE = 0.1 # Probability that the disease kills
-FATALITY_RATE_AGE = {
+BASE_ALPHA_RATE = 0.1 # Probability that the disease kills an infected person on a good day
+FATALITY_RATE_AGE = { # Rate at which people die (1/6 = 6 days to kill a person)
   "0-1": 0.50,
   "2-29": 0.01,
   "30-59": 0.05,
@@ -37,7 +37,7 @@ FATALITY_RATE_AVERAGE = sum(POPULATION_PROPORTION_AGE_RANGE[ii]*FATALITY_RATE_AG
 
 TIME_PRESYMPTOMATIC = 2.5 # Not sure where this came from
 SIGMA = 1.0 / (5.2 - TIME_PRESYMPTOMATIC)  # The rate at which an exposed person becomes infectious.  symptom onset - presympomatic
-GAMMA = 1.0 / (2.0 * (4.6 - 1.0 / SIGMA))  # The rate an infectious is not recovers and moves into the resistant phase. Note that for the model it only means he does not infect anybody any more.
+GAMMA = 1.0 / (2.0 * (4.6 - 1.0 / SIGMA))  # The rate an infectious person recovers and moves into the recovered phase. Note that for the model it only means he does not infect anybody any more.
 
 # Disease Response
 # HOSPITAL_ICU_TIME = 12 # Days in ICU

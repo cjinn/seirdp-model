@@ -44,7 +44,7 @@ Running my Code
 Installation
 -----------
 1. Install Python3
-2. Run the command `pip3 install requirements.txt`
+2. Run the command `pip3 install -r requirements.txt`
 
 Demo
 -----------
