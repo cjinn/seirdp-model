@@ -1,4 +1,4 @@
-SEIRDP Model
+SEIRD Model
 =======
 
 Stages

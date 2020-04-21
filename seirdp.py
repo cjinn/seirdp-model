@@ -9,7 +9,7 @@ import math
 import covid_params # Change the values here if you want to adjust one variable at a time
 
 class seirdp():
-  def __init__(self, r0, r1, gamma, sigma, baseAlpha, rho, socDistResponseFactor=1.0, diseaseScalingFactor=0.1):
+  def __init__(self, r0, r1, gamma, sigma, baseAlpha, rho, socDistResponseFactor=1.0, diseaseScalingFactor=0.1, debugFlag=False):
     # Assign variables
     self.r0 = r0
     self.r1 = r1
@@ -21,6 +21,7 @@ class seirdp():
     self.diseaseScalingFactor = diseaseScalingFactor
 
     # Flags
+    self.debugFlag = debugFlag
     self.thresholdPrintFlag = False # When True, prints a statement of when countermeasures go into effect
 
   ## Model of SEIRDP
@@ -33,7 +34,7 @@ class seirdp():
 
     # Assigning constants
     if (x >= thrDay):
-        if self.thresholdPrintFlag:
+        if self.thresholdPrintFlag and self.debugFlag:
           print("Countermeasures come into effect on day: " + str(round(x)))
           self.thresholdPrintFlag = False
 
@@ -74,9 +75,10 @@ class seirdp():
 if __name__ == "__main__":
   E0 = 1  # exposed at initial time step
   N = covid_params.POPULATION
+  debugFlag = True
 
   modelInstance = seirdp(covid_params.r0, covid_params.r1, covid_params.GAMMA, covid_params.SIGMA,
-    covid_params.BASE_ALPHA, covid_params.RHO_AVERAGE, covid_params.SOCIAL_DISTANCE_RESPONSE_FACTOR)
+    covid_params.BASE_ALPHA, covid_params.RHO_AVERAGE, covid_params.SOCIAL_DISTANCE_RESPONSE_FACTOR, debugFlag)
   X, S, E, I, R, D = modelInstance.solve(N, E0, covid_params.SOCIAL_DISTANCE_DAY, covid_params.DAYS_MODEL)
 
   # Plot percentages of Population
