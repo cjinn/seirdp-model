@@ -34,7 +34,7 @@ class seirdp():
     # Assigning constants
     if (x >= thrDay):
         if self.thresholdPrintFlag:
-          print("Countermeasures come into effect on day: " + str(x))
+          print("Countermeasures come into effect on day: " + str(round(x)))
           self.thresholdPrintFlag = False
 
         beta = self.logisticFunction(x, thrDay, self.socDistResponseFactor) * gamma
@@ -103,6 +103,7 @@ if __name__ == "__main__":
   print('Number of Infected at Day ' + str(covid_params.DAYS_MODEL) + ': ' + str(round(I[-1])))
   print('Number of Recovered at Day ' + str(covid_params.DAYS_MODEL) + ': ' + str(round(R[-1])))
   print('Number of Dead at Day ' + str(covid_params.DAYS_MODEL) + ': ' + str(round(D[-1])))
+  print("Total Number of Population: " + str(round(N)))
 
   # Display plot
   plt.show()

@@ -59,7 +59,7 @@ There are many parameters when modelling a disease. This model attempts to accou
 Here is the list of parameters that you should change:
 * r0 - Basic Reproduction Number (Before countermeasures are in place)
 * r1 - Basic Reproduction Number (After countermeasures are in place)
-* gamma - The rate an infectious is not recovers and moves into the resistant phase. Note that for the model it only means he does not infect anybody any more.
+* gamma - # The rate an infectious person recovers and moves into the recovered phase. Note that for the model it only means he does not infect anybody any more.
 * sigma - The rate at which an exposed person becomes infectious
 * baseAlpha - Probability that the disease kills an infected person on a good day
 * rho - Average Rate at which people die (1/6 = 6 days to kill a person)
