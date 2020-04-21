@@ -8,7 +8,8 @@ import sys
 import base64
 
 # PyQt libraries
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QRegExpValidator
+from PyQt5.QtCore import QRegExp
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog,
 QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
 QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
@@ -63,61 +64,91 @@ class ModelDialog(QDialog):
     self.diagramGroup.setLayout(diagramLayout)
 
   def createPopulationGroupBox(self):
+    floatRegExpression = QRegExp("[0-9]+.?[0-9]{,4}")
+    integerRegExpression = QRegExp("\d+")
+
     self.populationGroup = QGroupBox("Population Parameters")
     populationLayout = QFormLayout()
 
     self.populationLE = QLineEdit()
     populationLayout.addRow(QLabel("Population (N):"))
+    inputValidator = QRegExpValidator(integerRegExpression, self.populationLE)
+    self.populationLE.setValidator(inputValidator)
     populationLayout.addWidget(self.populationLE)
 
     self.initialSeedLE = QLineEdit()
     populationLayout.addRow(QLabel("Initial Number of Infected (E[0]):"))
+    inputValidator = QRegExpValidator(integerRegExpression, self.initialSeedLE)
+    self.initialSeedLE.setValidator(inputValidator)
     populationLayout.addWidget(self.initialSeedLE)
 
     self.daysModelLE = QLineEdit()
     populationLayout.addRow(QLabel("Number of Days to Model:"))
+    inputValidator = QRegExpValidator(integerRegExpression, self.daysModelLE)
+    self.daysModelLE.setValidator(inputValidator)
     populationLayout.addWidget(self.daysModelLE)
 
     self.socDistanceResponseFactorLE = QLineEdit()
     populationLayout.addRow(QLabel("Social Distance Response Factor:"))
+    inputValidator = QRegExpValidator(floatRegExpression, self.socDistanceResponseFactorLE)
+    self.socDistanceResponseFactorLE.setValidator(inputValidator)
     populationLayout.addWidget(self.socDistanceResponseFactorLE)
-
+    
     self.socDistanceDayLE = QLineEdit()
     populationLayout.addRow(QLabel("Social Distance Day (x):"))
+    inputValidator = QRegExpValidator(integerRegExpression, self.socDistanceDayLE)
+    self.socDistanceDayLE.setValidator(inputValidator)
     populationLayout.addWidget(self.socDistanceDayLE)
 
     self.diseaseScalingFactorLE = QLineEdit()
+    inputValidator = QRegExpValidator(floatRegExpression, self.diseaseScalingFactorLE)
+    self.diseaseScalingFactorLE.setValidator(inputValidator)
     populationLayout.addRow(QLabel("Disease Scaling Factor:"))
     populationLayout.addWidget(self.diseaseScalingFactorLE)
 
     self.populationGroup.setLayout(populationLayout)   
   def createDiseaseGroupBox(self):
+    floatRegExpression = QRegExp("[0-9]+.?[0-9]{,2}")
+    integerRegExpression = QRegExp("\d+")
+
     self.diseaseGroup = QGroupBox("Disease Parameters")
     diseaseLayout = QFormLayout()
 
     self.r0LE = QLineEdit()
+    inputValidator = QRegExpValidator(floatRegExpression, self.r0LE)
+    self.r0LE.setValidator(inputValidator)
     diseaseLayout.addRow(QLabel("Basic Reproductive Number of Disease Before Social Distancing (R0=β0/γ):"))
     diseaseLayout.addWidget(self.r0LE)
 
     self.r1LE = QLineEdit()
+    inputValidator = QRegExpValidator(floatRegExpression, self.r1LE)
+    self.r1LE.setValidator(inputValidator)
     diseaseLayout.addRow(QLabel("Basic Reproductive Number of Disease After Social Distancing (Rc=βc/γ):"))
     diseaseLayout.addWidget(self.r1LE)
 
+    self.gammaLE = QLineEdit()
+    inputValidator = QRegExpValidator(floatRegExpression, self.gammaLE)
+    self.gammaLE.setValidator(inputValidator)
+    diseaseLayout.addRow(QLabel("The rate of an infectious person recovering (γ=1/Days):"))
+    diseaseLayout.addWidget(self.gammaLE)
+
     self.alphaLE = QLineEdit()
+    inputValidator = QRegExpValidator(floatRegExpression, self.alphaLE)
+    self.alphaLE.setValidator(inputValidator)
     diseaseLayout.addRow(QLabel("Probability the disease will kill an infected person (α)"))
     diseaseLayout.addWidget(self.alphaLE)
 
     self.rhoLE = QLineEdit()
+    inputValidator = QRegExpValidator(floatRegExpression, self.rhoLE)
+    self.rhoLE.setValidator(inputValidator)
     diseaseLayout.addRow(QLabel("Average Fatality Rate per Day (ρ):"))
     diseaseLayout.addWidget(self.rhoLE)
 
     self.sigmaLE = QLineEdit()
+    inputValidator = QRegExpValidator(floatRegExpression, self.sigmaLE)
+    self.sigmaLE.setValidator(inputValidator)
     diseaseLayout.addRow(QLabel("Probability an exposed person becomes an infectious (σ):"))
     diseaseLayout.addWidget(self.sigmaLE)
-
-    self.gammaLE = QLineEdit()
-    diseaseLayout.addRow(QLabel("The rate of an infectious person recovering (γ=1/Days):"))
-    diseaseLayout.addWidget(self.gammaLE)
 
     self.diseaseGroup.setLayout(diseaseLayout)
 
