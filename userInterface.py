@@ -54,12 +54,10 @@ class ModelDialog(QDialog):
 
     pixmap = QPixmap("seird.png")
     pixmap = pixmap.scaledToWidth(500)
-    # pixmap = pixmap.scaledToHeight(64)
 
     labelImage = QLabel(self)
     labelImage.setPixmap(pixmap)
     diagramLayout.addWidget(labelImage)
-    
     
     self.diagramGroup.setLayout(diagramLayout)
 
@@ -109,7 +107,6 @@ class ModelDialog(QDialog):
     self.populationGroup.setLayout(populationLayout)   
   def createDiseaseGroupBox(self):
     floatRegExpression = QRegExp("[0-9]+.?[0-9]{,2}")
-    integerRegExpression = QRegExp("\d+")
 
     self.diseaseGroup = QGroupBox("Disease Parameters")
     diseaseLayout = QFormLayout()
