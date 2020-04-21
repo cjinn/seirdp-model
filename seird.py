@@ -78,7 +78,7 @@ if __name__ == "__main__":
   debugFlag = True
 
   modelInstance = seirdp(covid_params.r0, covid_params.r1, covid_params.GAMMA, covid_params.SIGMA,
-    covid_params.BASE_ALPHA, covid_params.RHO_AVERAGE, covid_params.SOCIAL_DISTANCE_RESPONSE_FACTOR, debugFlag)
+    covid_params.BASE_ALPHA, covid_params.RHO_AVERAGE, covid_params.SOCIAL_DISTANCE_RESPONSE_FACTOR, covid_params.DISEASE_SCALING_FACTOR, debugFlag)
   X, S, E, I, R, D = modelInstance.solve(N, E0, covid_params.SOCIAL_DISTANCE_DAY, covid_params.DAYS_MODEL)
 
   # Plot percentages of Population
