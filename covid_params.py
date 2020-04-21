@@ -21,7 +21,7 @@ DISEASE_SCALING_FACTOR = 0.2 # Models out how overburdened the healthcare system
 ## Disease
 r0 = 2.0 # Basic Reproductive Number of the disease (unrestrictive)
 rc = 0.88 # Basic Reproductive Number of the disease when social distancing is implemented
-BASE_ALPHA = 0.07 # Probability that disease kills a person
+BASE_ALPHA = 0.07 # Probability that the disease will kill a person
 RHO_AGE_RANGE = { # Rate at which people die (1/6 = 6 days to kill a person)
   "0-14": 0.002,
   "15-65": 0.021,
