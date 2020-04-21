@@ -5,26 +5,30 @@ import scipy.integrate
 import matplotlib.pyplot as plt
 import math
 import sys
-
-# Local Libraries
-import seirdp
-import covid_params
+import base64
 
 # PyQt libraries
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog,
 QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
 QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
 QVBoxLayout)
 
-class ModelDialog(QDialog):
-  NumGridRows = 11
-  NumButtons = 4
+# Local Libraries
+import seird
 
+class ModelDialog(QDialog):
   def __init__(self):
     super(ModelDialog, self).__init__()
 
     self.setWindowTitle("SEIRD Model Generation")
     self.createMainWindowLayout()
+
+    self.top = 0
+    self.left = 0
+    self.width = 640
+    self.height = 480
+    self.setGeometry(self.left, self.top, self.width, self.height)
 
   def createMainWindowLayout(self):
     buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
@@ -33,23 +37,41 @@ class ModelDialog(QDialog):
 
     mainLayout = QVBoxLayout()
 
+    self.createDiagramGroupBox()
     self.createPopulationGroupBox()
     self.createDiseaseGroupBox()
-
+    
+    mainLayout.addWidget(self.diagramGroup)
     mainLayout.addWidget(self.populationGroup)
     mainLayout.addWidget(self.diseaseGroup)
     mainLayout.addWidget(buttonBox)
     self.setLayout(mainLayout)
+
+  def createDiagramGroupBox(self):
+    self.diagramGroup = QGroupBox("SEIRD Diagram")
+    diagramLayout = QFormLayout()
+
+    pixmap = QPixmap("seird.png")
+    pixmap = pixmap.scaledToWidth(500)
+    # pixmap = pixmap.scaledToHeight(64)
+
+    labelImage = QLabel(self)
+    labelImage.setPixmap(pixmap)
+    diagramLayout.addWidget(labelImage)
+    
+    
+    self.diagramGroup.setLayout(diagramLayout)
+
   def createPopulationGroupBox(self):
     self.populationGroup = QGroupBox("Population Parameters")
     populationLayout = QFormLayout()
 
     self.populationLE = QLineEdit()
-    populationLayout.addRow(QLabel("Population:"))
+    populationLayout.addRow(QLabel("Population (N):"))
     populationLayout.addWidget(self.populationLE)
 
     self.initialSeedLE = QLineEdit()
-    populationLayout.addRow(QLabel("Initial Number of Infected:"))
+    populationLayout.addRow(QLabel("Initial Number of Infected (E[0]):"))
     populationLayout.addWidget(self.initialSeedLE)
 
     self.daysModelLE = QLineEdit()
@@ -61,8 +83,12 @@ class ModelDialog(QDialog):
     populationLayout.addWidget(self.socDistanceResponseFactorLE)
 
     self.socDistanceDayLE = QLineEdit()
-    populationLayout.addRow(QLabel("Social Distance Day:"))
+    populationLayout.addRow(QLabel("Social Distance Day (x):"))
     populationLayout.addWidget(self.socDistanceDayLE)
+
+    self.diseaseScalingFactorLE = QLineEdit()
+    populationLayout.addRow(QLabel("Disease Scaling Factor:"))
+    populationLayout.addWidget(self.diseaseScalingFactorLE)
 
     self.populationGroup.setLayout(populationLayout)   
   def createDiseaseGroupBox(self):
@@ -70,30 +96,36 @@ class ModelDialog(QDialog):
     diseaseLayout = QFormLayout()
 
     self.r0LE = QLineEdit()
-    diseaseLayout.addRow(QLabel("Basic Reproductive Number of Disease (Before Social Distancing):"))
+    diseaseLayout.addRow(QLabel("Basic Reproductive Number of Disease Before Social Distancing (R0=β0/γ):"))
     diseaseLayout.addWidget(self.r0LE)
 
     self.r1LE = QLineEdit()
-    diseaseLayout.addRow(QLabel("Basic Reproductive Number of Disease (After Social Distancing):"))
+    diseaseLayout.addRow(QLabel("Basic Reproductive Number of Disease After Social Distancing (Rc=βc/γ):"))
     diseaseLayout.addWidget(self.r1LE)
 
     self.alphaLE = QLineEdit()
-    diseaseLayout.addRow(QLabel("Probability disease kills an infected person per Day:"))
+    diseaseLayout.addRow(QLabel("Probability the disease will kill an infected person (α)"))
     diseaseLayout.addWidget(self.alphaLE)
 
     self.rhoLE = QLineEdit()
-    diseaseLayout.addRow(QLabel("Average Fatality Rate per Day:"))
+    diseaseLayout.addRow(QLabel("Average Fatality Rate per Day (ρ):"))
     diseaseLayout.addWidget(self.rhoLE)
 
     self.sigmaLE = QLineEdit()
-    diseaseLayout.addRow(QLabel("Rate an Exposed Person becomes infectious (No symptoms):"))
+    diseaseLayout.addRow(QLabel("Probability an exposed person becomes an infectious (σ):"))
     diseaseLayout.addWidget(self.sigmaLE)
 
     self.gammaLE = QLineEdit()
-    diseaseLayout.addRow(QLabel("Rate Infected Person Recovers:"))
+    diseaseLayout.addRow(QLabel("The rate of an infectious person recovering (γ=1/Days):"))
     diseaseLayout.addWidget(self.gammaLE)
 
     self.diseaseGroup.setLayout(diseaseLayout)
+
+  # def validateInputInteger(input):
+
+
+  # def validateInputInteger(input):
+        
   def runModel(self):
     ## Extract values from Input
     population = int(self.populationLE.text())
@@ -101,6 +133,7 @@ class ModelDialog(QDialog):
     daysModel = int(self.daysModelLE.text())
     socDistResponseFactor = float(self.socDistanceResponseFactorLE.text())
     thrDay = int(self.socDistanceDayLE.text())
+    diseaseScalingFactor = float(self.diseaseScalingFactorLE.text())
     r0 = float(self.r0LE.text())
     r1 = float(self.r1LE.text())
     baseAlpha = float(self.alphaLE.text())
@@ -108,8 +141,8 @@ class ModelDialog(QDialog):
     sigma = float(self.sigmaLE.text())
     gamma = float(self.gammaLE.text())
 
-    modelInstance = seirdp.seirdp(r0, r1, gamma, sigma,
-      baseAlpha, rho, socDistResponseFactor)
+    modelInstance = seird.seird(r0, r1, gamma, sigma,
+      baseAlpha, rho, socDistResponseFactor, diseaseScalingFactor)
     X, S, E, I, R, D = modelInstance.solve(population, inititalInfected, thrDay, daysModel)
 
     # Plot percentages of Population
@@ -138,3 +171,4 @@ if __name__ == '__main__':
   app = QApplication(sys.argv)
   dialog = ModelDialog()
   sys.exit(dialog.exec_())
+  
