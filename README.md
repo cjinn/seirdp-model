@@ -1,6 +1,6 @@
 Disclaimer
 =======
-This SEIRD model is put together for a school project and for general interest. If you want an accurate model that models out COVID-19 and other pandemics for reasons other than general interest, please seek elsewhere.
+This SEIRD model is put together for a school project and for general interest. If you want an accurate model that models out COVID-19 and other pandemics for reasons other than general interest, please seek elsewhere. As of April 2020, this project is considered complete and archived.
 
 SEIRD Model
 =======
